@@ -20,4 +20,5 @@ override.tf.json - рекурсивное игнорирование файла 
 terraform.rc - рекурсивное игнорирование файла terraform.rc
 
 add new line
-  
+
+added a new line and committed to the IDE 
