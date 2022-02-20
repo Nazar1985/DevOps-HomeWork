@@ -6,8 +6,95 @@
     * предусмотрите возможность добавления опций к запускаемому процессу через внешний файл (посмотрите, например, на `systemctl cat cron`),
     * удостоверьтесь, что с помощью systemctl процесс корректно стартует, завершается, а после перезагрузки автоматически поднимается.
 
-1. Ознакомьтесь с опциями node_exporter и выводом `/metrics` по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
-1. Установите в свою виртуальную машину [Netdata](https://github.com/netdata/netdata). Воспользуйтесь [готовыми пакетами](https://packagecloud.io/netdata/netdata/install) для установки (`sudo apt install -y netdata`). После успешной установки:
+Перед запуском vagrant изменяем настройки ВМ. В Vagrantfile убираем комментарий и модифицируем строку для проброса портов:
+
+ `config.vm.network "forwarded_port", guest: 9090, host: 9090`
+
+`vagrant up` - запускаем ВМ 
+
+`vagrant ssh` - подключаемся к ВМ через SSH
+
+`sudo apt install prometheus` -
+
+`sudo useradd --no-create-home --shell /bin/false prometheus`
+
+`sudo systemctl edit --full --force prometheus.service`
+
+Текст файла systemd службы для удобного запуска prometheus:
+
+```
+[Unit]
+Description=Prometheus
+Wants=network-online.target
+After=network-online.target
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStart=/usr/local/bin/prometheus \
+--config.file /etc/prometheus/prometheus.yml \
+--storage.tsdb.path /var/lib/prometheus/ \
+--web.console.templates=/etc/prometheus/consoles \
+--web.console.libraries=/etc/prometheus/console_libraries
+[Install]
+WantedBy=multi-user.target
+```
+
+`sudo systemctl start prometheus` - 
+
+`127.0.0.1:9090` - 
+
+
+`sudo apt install prometheus-node-exporter`
+
+`sudo useradd --no-create-home --shell /bin/false node_exporter`
+
+`sudo systemctl edit --full --force node_exporter.service`
+
+
+
+```
+[Unit]
+Description=Prometheus Node Exporter
+Wants=network-online.target
+After=network-online.target
+[Service]
+User=node_exporter
+Group=node_exporter
+Type=simple
+ExecStart=/usr/local/bin/node_exporter
+[Install]
+WantedBy=multi-user.target
+```
+
+`sudo systemctl start node_exporter`
+
+
+2. Ознакомьтесь с опциями node_exporter и выводом `/metrics` по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
+
+CPU:
+    node_cpu_seconds_total{cpu="0",mode="idle"} 2238.49
+    node_cpu_seconds_total{cpu="0",mode="system"} 16.72
+    node_cpu_seconds_total{cpu="0",mode="user"} 6.86
+    process_cpu_seconds_total
+    
+Memory:
+    node_memory_MemAvailable_bytes 
+    node_memory_MemFree_bytes
+    
+Disk(если несколько дисков то для каждого):
+    node_disk_io_time_seconds_total{device="sda"} 
+    node_disk_read_bytes_total{device="sda"} 
+    node_disk_read_time_seconds_total{device="sda"} 
+    node_disk_write_time_seconds_total{device="sda"}
+    
+Network(так же для каждого активного адаптера):
+    node_network_receive_errs_total{device="eth0"} 
+    node_network_receive_bytes_total{device="eth0"} 
+    node_network_transmit_bytes_total{device="eth0"}
+    node_network_transmit_errs_total{device="eth0"}
+
+3. Установите в свою виртуальную машину [Netdata](https://github.com/netdata/netdata). Воспользуйтесь [готовыми пакетами](https://packagecloud.io/netdata/netdata/install) для установки (`sudo apt install -y netdata`). После успешной установки:
     * в конфигурационном файле `/etc/netdata/netdata.conf` в секции [web] замените значение с localhost на `bind to = 0.0.0.0`,
     * добавьте в Vagrantfile проброс порта Netdata на свой локальный компьютер и сделайте `vagrant reload`:
 
@@ -17,35 +104,64 @@
 
     После успешной перезагрузки в браузере *на своем ПК* (не в виртуальной машине) вы должны суметь зайти на `localhost:19999`. Ознакомьтесь с метриками, которые по умолчанию собираются Netdata и с комментариями, которые даны к этим метрикам.
 
-1. Можно ли по выводу `dmesg` понять, осознает ли ОС, что загружена не на настоящем оборудовании, а на системе виртуализации?
-1. Как настроен sysctl `fs.nr_open` на системе по-умолчанию? Узнайте, что означает этот параметр. Какой другой существующий лимит не позволит достичь такого числа (`ulimit --help`)?
-1. Запустите любой долгоживущий процесс (не `ls`, который отработает мгновенно, а, например, `sleep 1h`) в отдельном неймспейсе процессов; покажите, что ваш процесс работает под PID 1 через `nsenter`. Для простоты работайте в данном задании под root (`sudo -i`). Под обычным пользователем требуются дополнительные опции (`--map-root-user`) и т.д.
-1. Найдите информацию о том, что такое `:(){ :|:& };:`. Запустите эту команду в своей виртуальной машине Vagrant с Ubuntu 20.04 (**это важно, поведение в других ОС не проверялось**). Некоторое время все будет "плохо", после чего (минуты) – ОС должна стабилизироваться. Вызов `dmesg` расскажет, какой механизм помог автоматической стабилизации. Как настроен этот механизм по-умолчанию, и как изменить число процессов, которое можно создать в сессии?
+4. Можно ли по выводу `dmesg` понять, осознает ли ОС, что загружена не на настоящем оборудовании, а на системе виртуализации?
+```
+dmesg |grep virtualiz
+[    0.001979] CPU MTRRs all blank - virtualized system.
+[    0.062738] Booting paravirtualized kernel on KVM
+[    2.868055] systemd[1]: Detected virtualization oracle.
+```
+5. Как настроен sysctl `fs.nr_open` на системе по-умолчанию? Узнайте, что означает этот параметр. Какой другой существующий лимит не позволит достичь такого числа (`ulimit --help`)?
 
- 
- ---
+`/sbin/sysctl -n fs.nr_open`
+1048576
 
-## Как сдавать задания
+```
+vagrant@vagrant:~$ ulimit -a
+core file size          (blocks, -c) 0
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 3571
+max locked memory       (kbytes, -l) 65536
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 1024
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) 8192
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 3571
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
+```
+жесткий лимит на пользователя не может быть увеличен, только уменьшен
 
-Обязательными к выполнению являются задачи без указания звездочки. Их выполнение необходимо для получения зачета и диплома о профессиональной переподготовке.
 
-Задачи со звездочкой (*) являются дополнительными задачами и/или задачами повышенной сложности. Они не являются обязательными к выполнению, но помогут вам глубже понять тему.
+6. Запустите любой долгоживущий процесс (не `ls`, который отработает мгновенно, а, например, `sleep 1h`) в отдельном неймспейсе 
+процессов; покажите, что ваш процесс работает под PID 1 через `nsenter`. Для простоты работайте в данном задании под root (`sudo -i`). 
+Под обычным пользователем требуются дополнительные опции (`--map-root-user`) и т.д.
 
-Домашнее задание выполните в файле readme.md в github репозитории. В личном кабинете отправьте на проверку ссылку на .md-файл в вашем репозитории.
+```commandline
+root@vagrant:~# ps -e | grep sleep
+   3333 pts/0    00:00:00 sleep
+root@vagrant:~# nsenter --target 3333 --pid --mount
+root@vagrant:/# 
+root@vagrant:/# ps
+    PID TTY          TIME CMD
+   3412 pts/1    00:00:00 sudo
+   3414 pts/1    00:00:00 bash
+   3427 pts/1    00:00:00 nsenter
+   3428 pts/1    00:00:00 bash
+   3439 pts/1    00:00:00 ps
+```
 
-Также вы можете выполнить задание в [Google Docs](https://docs.google.com/document/u/0/?tgif=d) и отправить в личном кабинете на проверку ссылку на ваш документ.
-Название файла Google Docs должно содержать номер лекции и фамилию студента. Пример названия: "1.1. Введение в DevOps — Сусанна Алиева".
+7. Найдите информацию о том, что такое `:(){ :|:& };:`. Запустите эту команду в своей виртуальной машине Vagrant с 
+Ubuntu 20.04 (**это важно, поведение в других ОС не проверялось**). Некоторое время все будет "плохо", после чего 
+(минуты) – ОС должна стабилизироваться. Вызов `dmesg` расскажет, какой механизм помог автоматической стабилизации. 
+Как настроен этот механизм по-умолчанию, и как изменить число процессов, которое можно создать в сессии?
 
-Если необходимо прикрепить дополнительные ссылки, просто добавьте их в свой Google Docs.
 
-Перед тем как выслать ссылку, убедитесь, что ее содержимое не является приватным (открыто на комментирование всем, у кого есть ссылка), иначе преподаватель не сможет проверить работу. Чтобы это проверить, откройте ссылку в браузере в режиме инкогнито.
-
-[Как предоставить доступ к файлам и папкам на Google Диске](https://support.google.com/docs/answer/2494822?hl=ru&co=GENIE.Platform%3DDesktop)
-
-[Как запустить chrome в режиме инкогнито ](https://support.google.com/chrome/answer/95464?co=GENIE.Platform%3DDesktop&hl=ru)
-
-[Как запустить  Safari в режиме инкогнито ](https://support.apple.com/ru-ru/guide/safari/ibrw1069/mac)
-
-Любые вопросы по решению задач задавайте в чате Slack.
-
----
+В действительности эта команда является логической бомбой. Она оперирует определением функции с именем ‘:‘, 
+которая вызывает сама себя дважды: один раз на переднем плане и один раз в фоне. Она продолжает своё 
+выполнение снова и снова. 
