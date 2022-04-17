@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
-hosts=("192.168.0.1:80" "173.194.222.133:80" "87.250.250.242:80")
+hosts=("192.168.0.1" "173.194.222.133" "87.250.250.242")
 
 for host in "${hosts[@]}"; do
-  for i in {1..5}; do
-    status=$(curl -Is --connect-timeout 5 "$host" | grep HTTP | awk '{print $2 " " $3 " " $4}')
-    echo "$host" "status = $status" >> hosts.log
+  for i in {1...5}; do
+    nc -z -v -w3 $host 80 2>/dev/null
+    res=$?
+    if [ "$res" != 0 ]; then
+      echo "`date` $host port 80 is closed" >> hosts.log
+    else
+      echo "`date` $host port 80 is open" >> hosts.log
+    fi
   done
 done
