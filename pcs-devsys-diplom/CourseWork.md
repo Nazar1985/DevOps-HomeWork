@@ -29,11 +29,11 @@
 
 ###### Поднимем сервер  
 
-![Screenshot from 2022-05-15 02-05-00.png](Screenshot from 2022-05-15 02-05-00.png)
+![img_1.png](img_1.png)
 
 - Процесс установки и настройки ufw
 
-![Screenshot from 2022-05-15 02-09-58.png](Screenshot from 2022-05-15 02-09-58.png)
+![Screenshot_from_2022-05-15_02-09-58.png](Screenshot_from_2022-05-15_02-09-58.png)
 
 ![Screenshot from 2022-05-14 14-50-42.png](Screenshot from 2022-05-14 14-50-42.png)
 
