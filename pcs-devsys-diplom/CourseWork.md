@@ -29,79 +29,79 @@
 
 ###### Поднимем сервер  
 
-![](Screenshot from 2022-05-15 02-05-00.png)
+![Screenshot from 2022-05-15 02-05-00.png](Screenshot from 2022-05-15 02-05-00.png)
 
 - Процесс установки и настройки ufw
 
-![](Screenshot from 2022-05-15 02-09-58.png)
+![Screenshot from 2022-05-15 02-09-58.png](Screenshot from 2022-05-15 02-09-58.png)
 
-![](Screenshot from 2022-05-14 14-50-42.png)
+![Screenshot from 2022-05-14 14-50-42.png](Screenshot from 2022-05-14 14-50-42.png)
 
 - Процесс установки и выпуска сертификата с помощью hashicorp vault
 ###### подключаем репозиторий для установки vault
 
-![](Screenshot from 2022-05-15 02-11-36.png)
+![Screenshot from 2022-05-15 02-11-36.png](Screenshot from 2022-05-15 02-11-36.png)
 
 ###### устанавливаем vault
 
-![](Screenshot from 2022-05-15 02-14-20.png)
+![Screenshot from 2022-05-15 02-14-20.png](Screenshot from 2022-05-15 02-14-20.png)
 
 ###### устанавливаем утилиту jq для обработки json
 
-![](Screenshot from 2022-05-15 02-14-25.png)
+![Screenshot from 2022-05-15 02-14-25.png](Screenshot from 2022-05-15 02-14-25.png)
 
 ###### запускаем server vault в другом сеансе 
 
-![](Screenshot from 2022-05-15 02-17-05.png)
+![Screenshot from 2022-05-15 02-17-05.png](Screenshot from 2022-05-15 02-17-05.png)
 
-![](Screenshot from 2022-05-15 02-17-12.png)
+![Screenshot from 2022-05-15 02-17-12.png](Screenshot from 2022-05-15 02-17-12.png)
 
 ###### Экспортируем переменные и создаем корневой центр и промежуточный центр сертификации
 
-![](Screenshot from 2022-05-15 02-19-34.png)
+![Screenshot from 2022-05-15 02-19-34.png](Screenshot from 2022-05-15 02-19-34.png)
 
-![](Screenshot from 2022-05-15 02-23-17.png)
+![Screenshot from 2022-05-15 02-23-17.png](Screenshot from 2022-05-15 02-23-17.png)
 
 ###### создаем роль и запрашиваем новый сертификат
 
-![](Screenshot from 2022-05-15 02-26-28.png)
+![Screenshot from 2022-05-15 02-26-28.png](Screenshot from 2022-05-15 02-26-28.png)
 
 ###### Преобразовываем сертификаты (переименовываем файлы). 
 
-![](Screenshot from 2022-05-15 02-29-28.png)
+![Screenshot from 2022-05-15 02-29-28.png](Screenshot from 2022-05-15 02-29-28.png)
 
 ###### копируем через папку `/vagrant/` гостевой системы файлы сертификата хостовую систему и обновляем хранилище сертификатов хостовой системы
 
-![](Screenshot from 2022-05-15 02-41-15.png)
+![Screenshot from 2022-05-15 02-41-15.png](Screenshot from 2022-05-15 02-41-15.png)
 
 - Процесс установки и настройки сервера nginx
 
-![](Screenshot from 2022-05-15 03-45-39.png)
+![Screenshot from 2022-05-15 03-45-39.png](Screenshot from 2022-05-15 03-45-39.png)
 
-![](Screenshot from 2022-05-15 03-46-33.png)
+![Screenshot from 2022-05-15 03-46-33.png](Screenshot from 2022-05-15 03-46-33.png)
 
-![](Screenshot from 2022-05-15 04-34-19.png)
+![Screenshot from 2022-05-15 04-34-19.png](Screenshot from 2022-05-15 04-34-19.png)
 
-![](Screenshot from 2022-05-15 19-43-06.png)
+![Screenshot from 2022-05-15 19-43-06.png](Screenshot from 2022-05-15 19-43-06.png)
 
 - Страница сервера nginx в браузере хоста не содержит предупреждений 
 
-![](Screenshot from 2022-05-14 22-39-08.png)
+![Screenshot from 2022-05-14 22-39-08.png](Screenshot from 2022-05-14 22-39-08.png)
 
-![](Screenshot from 2022-05-15 04-37-44.png)
+![Screenshot from 2022-05-15 04-37-44.png](Screenshot from 2022-05-15 04-37-44.png)
 
-![](Screenshot from 2022-05-15 04-37-46.png)
+![Screenshot from 2022-05-15 04-37-46.png](Screenshot from 2022-05-15 04-37-46.png)
 
 - Скрипт генерации нового сертификата работает (сертификат сервера ngnix должен быть "зеленым")
 
-![](Screenshot from 2022-05-15 05-27-19.png)
+![Screenshot from 2022-05-15 05-27-19.png](Screenshot from 2022-05-15 05-27-19.png)
 
-![](Screenshot from 2022-05-15 05-27-23.png)
+![Screenshot from 2022-05-15 05-27-23.png](Screenshot from 2022-05-15 05-27-23.png)
 
-![](Screenshot from 2022-05-15 05-27-55.png)
+![Screenshot from 2022-05-15 05-27-55.png](Screenshot from 2022-05-15 05-27-55.png)
 
-![](Screenshot from 2022-05-15 05-30-10.png)
+![Screenshot from 2022-05-15 05-30-10.png](Screenshot from 2022-05-15 05-30-10.png)
 
 - Crontab работает (выберите число и время так, чтобы показать что crontab запускается и делает что надо)
 
-![](Screenshot from 2022-05-15 19-28-52.png)
+![Screenshot from 2022-05-15 19-28-52.png](Screenshot from 2022-05-15 19-28-52.png)
