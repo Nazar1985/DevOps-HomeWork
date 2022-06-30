@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    volumes:
+      - ./test_data:/db
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_HOST: 127.0.0.1
+    restart: always
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
