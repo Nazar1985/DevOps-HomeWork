@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+
+  postgres:
+    image: postgres:13-alpine
+    container_name: postgres_db
+    volumes:
+      - ./data_db:/var/lib/postgresql/data
+      - ./test_data:/var/lib/postgresql/backup
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_USER: "postgres"
+      PGDATA: /var/lib/postgresql/data
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    networks:
+      - turreta_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_db
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    networks:
+      - turreta_network
+
+networks:
+  turreta_network:
+    driver: bridge
